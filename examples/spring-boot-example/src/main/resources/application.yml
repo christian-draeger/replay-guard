@@ -1,0 +1,4 @@
+replay:
+  guard:
+    max-age-in-seconds: 42
+    secret-key: "test123"
