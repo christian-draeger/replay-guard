@@ -104,3 +104,11 @@ nexusPublishing {
         sonatype()
     }
 }
+
+// do not generate extra load on Nexus with new staging repository if signing fails
+val initializeSonatypeStagingRepository by tasks.existing
+subprojects {
+    initializeSonatypeStagingRepository {
+        shouldRunAfter(tasks.withType<Sign>())
+    }
+}
