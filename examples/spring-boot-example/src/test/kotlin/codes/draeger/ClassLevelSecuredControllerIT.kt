@@ -1,7 +1,7 @@
 package codes.draeger
 
 import codes.draeger.replayguard.core.AesSecurityStrategy
-import codes.draeger.replayguard.core.HEADER_NAME
+import codes.draeger.replayguard.core.REPLAY_GUARD_HEADER_NAME
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,7 +27,7 @@ class ClassLevelSecuredControllerIT(
     @Test
     fun `replay guard secured endpoint with valid encrypted header returns success`() {
         val headers = HttpHeaders()
-        headers.add(HEADER_NAME, createValidEncryptedHeader())
+        headers.add(REPLAY_GUARD_HEADER_NAME, createValidEncryptedHeader())
         val entity = HttpEntity<String>(headers)
 
         val response = restTemplate.exchange("http://localhost:$port/foo", HttpMethod.GET, entity, String::class.java)

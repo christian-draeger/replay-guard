@@ -1,7 +1,7 @@
 package codes.draeger.replayguard.spring
 
 import codes.draeger.replayguard.core.AesSecurityStrategy
-import codes.draeger.replayguard.core.HEADER_NAME
+import codes.draeger.replayguard.core.REPLAY_GUARD_HEADER_NAME
 import codes.draeger.replayguard.core.InvalidEncryptionKeyException
 import codes.draeger.replayguard.core.InvalidNonceException
 import codes.draeger.replayguard.core.NonceExpiredException
@@ -20,7 +20,7 @@ class EncryptedRequestInterceptor(
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         if (handler is HandlerMethod && shouldValidateRequest(handler)) {
-            val encryptedHeader = request.getHeader(HEADER_NAME)
+            val encryptedHeader = request.getHeader(REPLAY_GUARD_HEADER_NAME)
 
             if (encryptedHeader.isNullOrEmpty()) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "Missing encrypted header")

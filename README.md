@@ -2,7 +2,7 @@
 
 ## Overview
 
-ReplayGuard is a security-focused library designed to enhance the security of communications between mobile applications
+ReplayGuard is a security-focused library designed to enhance the security of communications between client applications
 and backend servers. This library addresses the critical need for secure data transmission, specifically targeting the
 vulnerabilities associated with replay attacks and unauthorized data interception.
 
