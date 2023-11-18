@@ -12,6 +12,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the changed files back to the repository. (needed by commit action)
+      contents: write
+
     steps:
       - uses: actions/checkout@v2
         with:
@@ -60,7 +64,7 @@ jobs:
           ORG_GRADLE_PROJECT_sonatypePassword: ${{secrets.ORG_GRADLE_PROJECT_SONATYPEPASSWORD}}
         run: ./gradlew publishToSonatype #closeAndReleaseSonatypeStagingRepository
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: bump version ${{ steps.current_version.outputs.value }} --> ${{ github.event.inputs.version }}
           file_pattern: '*.properties'
