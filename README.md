@@ -111,8 +111,7 @@ configuration, you can easily add encrypted request validation to your endpoints
 
     ```gradle
     dependencies {
-        implementation("codes.draeger:server-integration-spring-boot:0.1.0")
-        // other necessary dependencies
+        implementation("codes.draeger:replay-guard-server-integration-spring-boot:0.1.0")
     }
     ```
 
@@ -121,7 +120,7 @@ configuration, you can easily add encrypted request validation to your endpoints
 
     ```properties
     replay.guard.secret-key=YourSecretKey
-    replay.guard.max-age-in-seconds=180
+    replay.guard.max-age-in-seconds=20
     ```
 
 #### Using the Annotation
