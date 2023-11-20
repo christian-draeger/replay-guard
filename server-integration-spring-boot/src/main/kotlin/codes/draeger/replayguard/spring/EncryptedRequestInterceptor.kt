@@ -1,10 +1,10 @@
 package codes.draeger.replayguard.spring
 
-import codes.draeger.replayguard.core.AesSecurityStrategy
-import codes.draeger.replayguard.core.REPLAY_GUARD_HEADER_NAME
 import codes.draeger.replayguard.core.InvalidEncryptionKeyException
 import codes.draeger.replayguard.core.InvalidNonceException
 import codes.draeger.replayguard.core.NonceExpiredException
+import codes.draeger.replayguard.core.REPLAY_GUARD_HEADER_NAME
+import codes.draeger.replayguard.core.SecurityStrategy
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
@@ -15,7 +15,7 @@ import org.springframework.web.servlet.HandlerInterceptor
 @Component
 class EncryptedRequestInterceptor(
     private val config: SecurityConfigurationProperties,
-    private val aesSecurityStrategy: AesSecurityStrategy,
+    private val securityStrategy: SecurityStrategy,
 ) : HandlerInterceptor {
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
@@ -29,7 +29,7 @@ class EncryptedRequestInterceptor(
 
             return try {
                 val decryptedData =
-                    aesSecurityStrategy.decrypt(encryptedHeader, config.secretKey, config.maxAgeInSeconds)
+                    securityStrategy.decrypt(encryptedHeader, config.secretKey, config.maxAgeInSeconds)
                 request.setAttribute("decryptedData", decryptedData)
                 true
             } catch (e: InvalidEncryptionKeyException) {

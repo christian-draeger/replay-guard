@@ -1,15 +1,16 @@
 package codes.draeger.replayguard.core
 
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
+import strikt.api.expectThat
+import strikt.api.expectThrows
+import strikt.assertions.isEqualTo
 import java.time.Instant
 
 class AesSecurityStrategyTest {
 
-    private lateinit var securityStrategy: AesSecurityStrategy
+    private lateinit var securityStrategy: SecurityStrategy
     private val secretKey = "my-secret"
     private var mockCurrentTime = Instant.now().epochSecond
 
@@ -28,7 +29,7 @@ class AesSecurityStrategyTest {
         val encryptedData = securityStrategy.encrypt(data, secretKey)
         val decryptedData = securityStrategy.decrypt(encryptedData, secretKey)
 
-        assertEquals(data, decryptedData)
+        expectThat(decryptedData).isEqualTo(data)
     }
 
     @Test
@@ -36,7 +37,7 @@ class AesSecurityStrategyTest {
         val data = "Hello, World!"
         val encryptedData = securityStrategy.encrypt(data, secretKey)
 
-        assertThrows<InvalidEncryptionKeyException> {
+        expectThrows<InvalidEncryptionKeyException> {
             securityStrategy.decrypt(encryptedData, "wrong-secret")
         }
     }
@@ -46,13 +47,13 @@ class AesSecurityStrategyTest {
         val data = "Hello, World!"
         val encryptedData = securityStrategy.encrypt(data, secretKey)
 
-        // Erster Decrypt-Versuch sollte erfolgreich sein
+        // using nonce first time should be successful
         assertDoesNotThrow {
             securityStrategy.decrypt(encryptedData, secretKey)
         }
 
-        // Zweiter Decrypt-Versuch mit derselben Nonce sollte scheitern
-        assertThrows<InvalidNonceException> {
+        // using nonce second time should fail
+        expectThrows<InvalidNonceException> {
             securityStrategy.decrypt(encryptedData, secretKey)
         }
     }
@@ -65,7 +66,7 @@ class AesSecurityStrategyTest {
 
         mockCurrentTime += maxAgeInSeconds + 1
 
-        assertThrows<NonceExpiredException> {
+        expectThrows<NonceExpiredException> {
             securityStrategy.decrypt(encryptedData, secretKey, maxAgeInSeconds)
         }
     }
@@ -83,7 +84,7 @@ class AesSecurityStrategyTest {
 
         mockCurrentTime += 10
 
-        assertThrows<NonceExpiredException> {
+        expectThrows<NonceExpiredException> {
             securityStrategy.decrypt(encryptedData, secretKey)
         }
     }
