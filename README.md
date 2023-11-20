@@ -13,6 +13,12 @@ transmitted over networks. Standard security measures like OAuth2 tokens can be 
 traffic is intercepted. ReplayGuard mitigates these risks by ensuring each request is unique and time-sensitive, using a
 combination of encrypted nonces and timestamps.
 
+### Classic HTTP Connection
+![diagram-http-connection.png](assets%2Fdiagram-http-connection.png)
+
+### ReplayGuard HTTP Connection
+![diagram-replayguard-http-connection.png](assets%2Fdiagram-replayguard-http-connection.png)
+
 ## Problem Solved
 
 ReplayGuard solves two major security concerns:
@@ -22,6 +28,12 @@ ReplayGuard solves two major security concerns:
 2. **Timestamp Validation**: Alongside the nonce, a current UTC timestamp is encrypted and sent. The backend server
    checks the timestamp to ensure the request is not older than a specified time window (e.g., 3 minutes), further
    securing against unauthorized request submissions.
+
+### Extra
+
+- **Data Encryption**: ReplayGuard uses AES encryption by default (open to implement your own symmetric-key algorithm) to secure the nonce and timestamp, ensuring that the data cannot
+  be intercepted and decrypted.
+- **Secured Data**: ReplayGuard connection can include custom data to be encrypted and send along with the nonce and timestamp. This can be used to hide sensitive data from the request on network level.
 
 ## How It Works
 
